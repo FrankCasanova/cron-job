@@ -3,7 +3,7 @@ document.getElementById('start-button').addEventListener('click', startFetching)
 function startFetching() {
   const serviceUrls = [
     'https://lol-statistics-eeyy.onrender.com/',
-    'https://pykedex.onrender.com/',
+    'https://pykedex.onrender.com/oauth_callback',
     'https://scrape-events-h6f9.onrender.com/',
     'https://scrape-my-food.onrender.com/',
     'https://yt-downloader-ga7r.onrender.com/',
