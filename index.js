@@ -2,11 +2,11 @@ document.getElementById('start-button').addEventListener('click', startFetching)
 
 function startFetching() {
   const serviceUrls = [
-    'https://lol-statistics-eeyy.onrender.com/docs',
-    'https://pykedex.onrender.com/docs',
-    'https://scrape-events-h6f9.onrender.com/docs',
-    'https://scrape-my-food.onrender.com/docs',
-    'https://yt-downloader-ga7r.onrender.com/docs',
+    'https://lol-statistics-eeyy.onrender.com/',
+    'https://pykedex.onrender.com/oauth_callback',
+    'https://scrape-events-h6f9.onrender.com/',
+    'https://scrape-my-food.onrender.com/',
+    'https://yt-downloader-ga7r.onrender.com/',
     // Add more URLs as needed
   ];
 
