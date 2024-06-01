@@ -16,42 +16,30 @@ function startFetching() {
 
   // Get current time
   let now = new Date();
-  let start = 0; // Default start time is 0 milliseconds (immediate)
+  let start = 0; // Start immediately
 
-  // Calculate the time until 8 AM
-  start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 8, 0, 0, 0) - now;
-  if (start < 0) {
-    start += 86400000; // if it's already past 8 AM, start tomorrow
-  }
   // Create a log element for start time
   let startTimeLog = document.createElement('p');
-  startTimeLog.textContent = "Fetching will start in " + start / 1000 + " seconds at 8 AM";
+  startTimeLog.textContent = "Fetching started immediately.";
   logContainer.appendChild(startTimeLog);
 
-  // Set a timeout to start fetching at the calculated start time
-  setTimeout(function() {
-    // Create a log element for fetching started
-    let fetchingStartLog = document.createElement('p');
-    fetchingStartLog.textContent = "Fetching started.";
-    logContainer.appendChild(fetchingStartLog);
+  let intervalID = setInterval(function() {
+    serviceUrls.forEach((url, index) => fetchData(url, index));
+  }, 780000); // 780000 milliseconds = 13 minutes
 
-    let intervalID = setInterval(function() {
-      serviceUrls.forEach((url, index) => fetchData(url, index));
-    }, 780000); // 780000 milliseconds = 13 minutes
+  // Function to fetch data and retry on error
+  function fetchData(url, index) {
+    // Log that URL is being fetched
+    let fetchingLog = document.createElement('p');
+    fetchingLog.textContent = "Fetching data from " + url + "...";
+    logContainer.appendChild(fetchingLog);
 
-    // Function to fetch data and retry on error
-    function fetchData(url, index) {
-      // Log that URL is being fetched
-      let fetchingLog = document.createElement('p');
-      fetchingLog.textContent = "Fetching data from " + url + "...";
-      logContainer.appendChild(fetchingLog);
-
-      fetch(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
-          'Accept': 'application/json',
-        }
-      })
+    fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
+        'Accept': 'application/json',
+      }
+    })
       .then(response => {
         // Log status code
         let statusLog = document.createElement('p');
@@ -90,19 +78,42 @@ function startFetching() {
     const statusText = allServicesUp ? 'All services up' : 'Some services are not ready';
     document.getElementById('services-status').textContent = statusText;
   }
+  // Calculate the time until 8 AM to start fetching if the button wasn't pressed
+  if (!document.getElementById('start-button').classList.contains('pressed')) {
+    start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 8, 0, 0, 0) - now;
+    if (start < 0) {
+      start += 86400000; // if it's already past 8 AM, start tomorrow
+    }
+    // Create a log element for start time
+    let startTimeLog = document.createElement('p');
+    startTimeLog.textContent = "Fetching will start in " + start / 1000 + " seconds at 8 AM";
+    logContainer.appendChild(startTimeLog);
+
+    // Set a timeout to start fetching at 8 AM if the button wasn't pressed
+    setTimeout(() => {
+      intervalID = setInterval(() => {
+        serviceUrls.forEach((url, index) => fetchData(url, index));
+      }, 780000); // 780000 milliseconds = 13 minutes
+
+      // Create a log element for fetching started
+      let fetchingStartLog = document.createElement('p');
+      fetchingStartLog.textContent = "Fetching started at 8 AM.";
+      logContainer.appendChild(fetchingStartLog);
+    }, start);
+  }
 
   // Calculate the time until 12 AM to stop fetching
-  let stop = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 1, 0, 0, 0) - now;
+  let stop = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0) - now;
   if (stop < 0) {
     stop += 86400000; // if it's already past 12 AM, stop tomorrow
   }
 
   // Create a log element for stop time
   let stopTimeLog = document.createElement('p');
-  stopTimeLog.textContent = "Fetching will stop in " + stop / 1000 + " seconds at 12 PM";
+  stopTimeLog.textContent = "Fetching will stop in " + stop / 1000 + " seconds at 12 AM";
   logContainer.appendChild(stopTimeLog);
 
-  // Set a timeout to stop fetching at 12 PM
+  // Set a timeout to stop fetching at 12 AM
   setTimeout(function() {
     clearInterval(intervalID);
     // Create a log element for fetching stopped
@@ -110,7 +121,6 @@ function startFetching() {
     fetchingStopLog.textContent = "Fetching stopped.";
     logContainer.appendChild(fetchingStopLog);
   }, stop);
-
-}, start);
 }
+
 
