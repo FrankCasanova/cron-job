@@ -3,10 +3,8 @@ document.getElementById('start-button').addEventListener('click', startFetching)
 function startFetching() {
   const serviceUrls = [
     'https://lol-statistics-eeyy.onrender.com/',
-    'https://pykedex.onrender.com/oauth_callback',
-    'https://scrape-events-h6f9.onrender.com/',
-    'https://scrape-my-food.onrender.com/',
-    'https://yt-downloader-ga7r.onrender.com/',
+    'https://scrape-events-h6f9.onrender.com/api/events/today',
+    'https://scrape-my-food.onrender.com/mercadona',
     // Add more URLs as needed
   ];
 
@@ -22,13 +20,15 @@ function startFetching() {
   let startTimeLog = document.createElement('p');
   startTimeLog.textContent = "Fetching started immediately.";
   logContainer.appendChild(startTimeLog);
-
+console.log('line 25');
   let intervalID = setInterval(function() {
     serviceUrls.forEach((url, index) => fetchData(url, index));
+    console.log('line 27');
   }, 780000); // 780000 milliseconds = 13 minutes
-
+console.log('line 29');
   // Function to fetch data and retry on error
   function fetchData(url, index) {
+    console.log('line 32');
     // Log that URL is being fetched
     let fetchingLog = document.createElement('p');
     fetchingLog.textContent = "Fetching data from " + url + "...";
